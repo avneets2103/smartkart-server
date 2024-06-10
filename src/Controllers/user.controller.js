@@ -104,52 +104,6 @@ const registerLoginUser = asyncHandler(async (req, res) => {
     }
 })
 
-const googleSign = asyncHandler(async (req, res) => {
-    const { email} = req.body;
-    if ( email.trim().length == 0 ) {
-        throw new ApiError(400, 'Email is required')
-    }
-
-    // Check if the user exists in your database
-    let user = await User.findOne({ email })
-    if (!user) {
-        user = await User.create({
-            email: email,
-        })
-
-        const check = await User.findById(user._id).select(
-            '-password -refreshToken'
-        )
-
-        if (!check) {
-            throw new ApiError(500, 'User not saved')
-        }
-    }
-
-    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id)
-    // Generate your own access and refresh tokens
-    const loggedInUser = await User.findById(user._id)
-    const options = {
-        httpOnly: true,
-        secure: true,
-    }
-
-    // TODO: remove this
-    console.log(loggedInUser);
-    
-    return res
-        .status(200)
-        .cookie('accessToken', accessToken, options)
-        .cookie('refreshToken', refreshToken, options)
-        .json(
-            new ApiResponse(
-                200,
-                { user: loggedInUser, accessToken, refreshToken },
-                'User logged in successfully'
-            )
-        )
-})
-
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
@@ -364,7 +318,6 @@ const resendOTP = asyncHandler(async (req, res) => {
 
 export {
     registerLoginUser,
-    googleSign,
     logoutUser,
     refreshAccessToken,
     changeCurrentPassword,
