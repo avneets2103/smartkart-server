@@ -1,5 +1,14 @@
 import { Router } from "express";
-import { registerLoginUser, logoutUser, refreshAccessToken, changeCurrentPassword, deleteUserByEmail, verifyOTP, resendOTP } from "../Controllers/user.controller.js";
+import { 
+    registerLoginUser, 
+    logoutUser, 
+    refreshAccessToken, 
+    changeCurrentPassword, 
+    deleteUserByEmail, 
+    verifyOTP, 
+    resendOTP,
+    generateNewPassword
+ } from "../Controllers/user.controller.js";
 import { verifyJWT } from "../Middlewares/auth.middleware.js";
 
 const router = Router();
@@ -7,6 +16,7 @@ const router = Router();
 router.route("/registerLogin").post(registerLoginUser);
 router.route("/verifyOTP").post(verifyOTP);
 router.route("/resendOTP").post(resendOTP);
+router.route("/generateNewPassword").post(generateNewPassword);
 
 // secured routs
 router.route("/logout").post(verifyJWT, logoutUser);

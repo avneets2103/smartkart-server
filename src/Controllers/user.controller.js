@@ -5,19 +5,9 @@ import { User } from '../Models/user.model.js'
 import jwt from 'jsonwebtoken'
 import { sendingMail } from '../Utils/sendMail.js'
 import speakeasy from 'speakeasy';
-import { emailOTP } from '../constants.js'
+import { emailNewPassword, emailOTP } from '../constants.js'
+import { randomString, generateOTP } from '../Utils/helpers.js'
 let otpExpiry = 0;
-
-const generateOTP = (secretBase32) => {
-    let token = speakeasy.totp({
-        secret: secretBase32, 
-        digits: 4,
-        step: 60, 
-        window: 1
-    });
-    
-    return token;
-}
 
 const generateAccessAndRefreshToken = async (userId) => {
     try {
@@ -316,6 +306,36 @@ const resendOTP = asyncHandler(async (req, res) => {
     }
 })
 
+const generateNewPassword = asyncHandler(async (req, res) => {
+    try {
+        const { email } = req.body;
+        if (email.trim().length == 0) {
+            throw new ApiError(400, 'Email required')
+        }
+
+        // check if already exist
+        const exsistingUser = await User.findOne({
+            $or: [{ email }],
+        })
+        if(!exsistingUser){
+            throw new ApiError(400, 'User not found');
+        }
+
+        // random string generator
+        const newPassword = randomString(8);
+        exsistingUser.password = newPassword;
+        await exsistingUser.save({ validateBeforeSave: false })
+
+        await sendingMail(exsistingUser.email, 'New Password', 'New Password Generated', emailNewPassword(newPassword));
+    
+        return res
+            .status(200)
+            .json(new ApiResponse(200, {}, 'Password change success'))
+    } catch (error) {
+        return new ApiError(500, 'Something went wrong in generatingNewPassword')
+    }
+})
+
 export {
     registerLoginUser,
     logoutUser,
@@ -323,5 +343,6 @@ export {
     changeCurrentPassword,
     deleteUserByEmail,
     verifyOTP,
-    resendOTP
+    resendOTP,
+    generateNewPassword
 }
