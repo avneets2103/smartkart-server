@@ -18,6 +18,19 @@ const userSchema = new mongoose.Schema(
         refreshToken: {
             type: String,
         },
+        avatarNumber: {
+            type: Number,
+            default: 1,
+            required: true
+        },
+        Lists: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'List'
+        }],
+        Categories: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Category'
+        }],
     },
     { timestamps: true }
 );

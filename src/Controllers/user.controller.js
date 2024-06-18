@@ -67,6 +67,7 @@ const registerLoginUser = asyncHandler(async (req, res) => {
             const user = await User.create({
                 password: password,
                 email: email,
+                avatarNumber: Math.floor(Math.random() * 10)+1
             })
 
             const check = await User.findById(user._id).select(
@@ -109,7 +110,8 @@ const logoutUser = asyncHandler(async (req, res) => {
 
     const options = {
         httpOnly: true,
-        secure: true,
+        secure: false,
+        sameSite: 'none',
     }
 
     return res
@@ -148,7 +150,8 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
             await generateAccessAndRefreshToken(decodedRefreshToken?._id)
         const options = {
             httpOnly: true,
-            secure: true,
+            secure: false,
+            sameSite: 'none',
         }
         return res
             .status(200)
@@ -251,7 +254,8 @@ const verifyOTP = asyncHandler(async (req, res) => {
             const loggedInUser = await User.findById(user._id)
             const options = {
                 httpOnly: true,
-                secure: true,
+                secure: false,
+                sameSite: 'none',
             }
             return res
                 .status(200)
@@ -336,6 +340,19 @@ const generateNewPassword = asyncHandler(async (req, res) => {
     }
 })
 
+const verifyAccessToken = asyncHandler(async (req, res) => {
+    console.log("Access token verified");
+    return res
+        .status(200)
+        .json(
+            new ApiResponse(
+                200,
+                null,
+                `Access token is present`
+            )
+        )
+})
+
 export {
     registerLoginUser,
     logoutUser,
@@ -344,5 +361,6 @@ export {
     deleteUserByEmail,
     verifyOTP,
     resendOTP,
-    generateNewPassword
+    generateNewPassword,
+    verifyAccessToken
 }
