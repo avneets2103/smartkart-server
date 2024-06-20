@@ -20,4 +20,8 @@ app.use(cookieParser());
 import userRouter from "./Routes/user.routes.js"
 app.use("/api/v1/users", userRouter);
 
+// list route
+import listRouter from "./Routes/list.routes.js"
+app.use("/api/v1/list", listRouter);
+
 export {app}

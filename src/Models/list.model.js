@@ -2,6 +2,11 @@ import mongoose from 'mongoose'
 
 const listSchema = new mongoose.Schema(
     {
+        key: {
+            type: String,
+            required: true,
+            unique: true,
+        },
         name: {
             type: String,
             required: true,
@@ -10,9 +15,9 @@ const listSchema = new mongoose.Schema(
             type: Number,
             required: false,
         },
-        category: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Category',
+        emoji: {
+            type: String,
+            required: true,
         },
         products: [{
             type: mongoose.Schema.Types.ObjectId,
