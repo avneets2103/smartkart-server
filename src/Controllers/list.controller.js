@@ -5,7 +5,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 
 const getListArray = asyncHandler(async (req, res) => {
     try {
-        const lists = await List.find({});
+        const lists = await List.find({userId: req.user._id});
         
         // Map and sort the fetched lists
         const listArray = lists
@@ -13,7 +13,7 @@ const getListArray = asyncHandler(async (req, res) => {
                 key: list.key,
                 name: list.name,
                 emoji: list.emoji,
-                lastUpdated: list.updatedAt
+                lastUpdated: list.updatedAt,
             }))
             .sort((a, b) => b.lastUpdated - a.lastUpdated); // Sort by lastUpdated, latest first
         
@@ -30,6 +30,7 @@ const getListArray = asyncHandler(async (req, res) => {
 });
 
 const addNewList = asyncHandler(async (req, res) => {
+    const userId = req.user._id;
     const {key, name, emoji, budget} = req.body;
     if(name === undefined || key === undefined || emoji === undefined) {
         throw new ApiError(400, 'name, key, emoji and lastUpdated are required');
@@ -42,7 +43,8 @@ const addNewList = asyncHandler(async (req, res) => {
         key: key,
         name: name,
         emoji: emoji,
-        budget: budget
+        budget: budget,
+        userId: userId
     });
     const savedList = await list.save();
     if(!savedList) {
