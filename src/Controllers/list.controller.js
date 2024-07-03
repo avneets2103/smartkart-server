@@ -176,12 +176,12 @@ const addProductToList = asyncHandler(async (req, res, next) => {
             }
 
             extractedDetails = {
+                images,
                 name,
                 brand,
                 pricing,
-                availability_stock,
-                images,
                 shipping_price,
+                availability_stock,
                 average_rating,
                 total_reviews,
                 ...productInfo,
