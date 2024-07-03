@@ -4,7 +4,7 @@ import { Product } from '../Models/product.model.js'
 import { Column } from '../Models/column.model.js'
 import ApiError from '../Utils/ApiError.js'
 import ApiResponse from '../Utils/ApiResponse.js'
-import { asyncHandler } from '../utils/asyncHandler.js'
+import { asyncHandler } from '../Utils/asyncHandler.js'
 
 const getListArray = asyncHandler(async (req, res) => {
     try {
