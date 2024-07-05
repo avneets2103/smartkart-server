@@ -138,6 +138,7 @@ const addProductToList = asyncHandler(async (req, res, next) => {
                     'x-rapidapi-key': process.env.RAPID_API_KEY,
                     'x-rapidapi-host': process.env.RAPID_API_HOST,
                 },
+                timeout: 20000
             };
             const response = await axios.request(options);
             const productData = response.data;
