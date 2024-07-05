@@ -11,5 +11,19 @@
             "src": "/(.*)",
             "dest": "/src/index.js"
         }
-    ]
+    ],
+    "functions": {
+        "src/*.js": {
+            "maxDuration": 30
+        },
+        "src/Controllers/*.js": {
+            "maxDuration": 30
+        },
+        "./**/*.js":{
+            "maxDuration": 30
+        },
+        "**/*.js":{
+            "maxDuration": 30
+        }
+    }
 }
