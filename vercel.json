@@ -1,12 +1,8 @@
 {
     "version": 2,
     "functions": {
-      "api/*.js": {
-        "runtime": "vercel/node@18.0.0",
-        "maxDuration": 30
-      },
-      "src/Controllers/*.js": {
-        "runtime": "vercel/node@18.0.0",
+      "**/*.js": {
+        "runtime": "vercel/node",
         "maxDuration": 30
       }
     },
