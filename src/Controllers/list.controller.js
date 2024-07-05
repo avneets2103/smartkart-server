@@ -251,16 +251,28 @@ const getListData = asyncHandler(async (req, res, next) => {
         const tableData = products.map(product => {
             const productData = {
                 key: product._id,
-                name: product.name,
-                productImage: product.productImage,
-                link: product.link,
-                utility: product.utility,
-                features: {},
+                features: {
+                    images: product.productImage,
+                    name: product.name,
+                    brand: '',
+                    pricing: 0,
+                    shipping_price: 0,
+                    availability_stock: false,
+                    average_rating: 0,
+                    total_reviews: 0,
+                    extraFeatures: {},
+                },
             };
 
             columns.forEach(column => {
                 const feature = product.features.find(f => f.column._id.toString() === column._id.toString());
-                productData.features[column.name] = feature ? feature.value : null;
+                if (feature) {
+                    if (['images', 'name', 'brand', 'pricing', 'shipping_price', 'availability_stock', 'average_rating', 'total_reviews'].includes(column.name)) {
+                        productData.features[column.name] = feature.value;
+                    } else {
+                        productData.features.extraFeatures[column.name] = feature.value;
+                    }
+                }
             });
 
             return productData;
@@ -286,7 +298,10 @@ const getListData = asyncHandler(async (req, res, next) => {
         });
 
         const response = {
-            columns: Array.from(featureKeys),
+            columns: Array.from(featureKeys).map(key => ({
+                key,
+                label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
+            })),
             options: uniqueOptions,
             products: tableData,
         };
