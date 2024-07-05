@@ -1,4 +1,5 @@
 import axios from 'axios'
+axios.defaults.timeout = 50000; 
 import { List } from '../Models/list.model.js'
 import { Product } from '../Models/product.model.js'
 import { Column } from '../Models/column.model.js'
