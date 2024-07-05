@@ -250,6 +250,7 @@ const getListData = asyncHandler(async (req, res, next) => {
 
         const tableData = products.map(product => {
             const productData = {
+                key: product._id,
                 name: product.name,
                 productImage: product.productImage,
                 link: product.link,
