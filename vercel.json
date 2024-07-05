@@ -1,7 +1,7 @@
 {
     "version": 2,
     "functions": {
-      "**/*.js": {
+      "api/users/**/*.js": {
         "runtime": "vercel/node@18.0.0",
         "maxDuration": 30
       }
