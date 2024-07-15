@@ -294,17 +294,45 @@ const getListData = asyncHandler(async (req, res, next) => {
             });
         });
 
-        // Convert options sets to arrays
-        Object.keys(uniqueOptions).forEach(key => {
-            uniqueOptions[key] = Array.from(uniqueOptions[key]).map(value => ({ name: value, utility: 0 }));
-        });
+        // Convert options sets to arrays and determine column types
+        const columnsResponse = Array.from(featureKeys).map(key => {
+            let type = 'string';
+            let range = [];
+            let utilityVal = 0;
+            let sampleValues = Array.from(uniqueOptions[key] || []);
 
-        const response = {
-            columns: Array.from(featureKeys).map(key => ({
+            if (['pricing', 'shipping_price', 'average_rating', 'total_reviews'].includes(key)) {
+                type = 'number';
+                range = [
+                    { value: Math.min(...sampleValues), utility: utilityVal },
+                    { value: Math.max(...sampleValues), utility: utilityVal }
+                ];
+            } else if (sampleValues.length > 0) {
+                if (sampleValues.every(value => !isNaN(value))) {
+                    type = 'number';
+                    range = [
+                        { value: Math.min(...sampleValues), utility: utilityVal },
+                        { value: Math.max(...sampleValues), utility: utilityVal }
+                    ];
+                } else {
+                    type = 'string';
+                    range = sampleValues.map(value => ({ value, utility: 0 }));
+                }
+            }
+
+            return {
                 key,
                 label: key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' '),
-            })),
-            options: uniqueOptions,
+                listId,
+                type,
+                utilityVal,
+                range,
+            };
+        });
+
+        // Prepare the final response
+        const response = {
+            columns: columnsResponse,
             products: tableData,
         };
 
