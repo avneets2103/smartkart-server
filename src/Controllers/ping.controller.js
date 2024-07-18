@@ -1,5 +1,5 @@
-import ApiResponse from "../Utils/ApiResponse";
-import { asyncHandler } from "../Utils/asyncHandler";
+import ApiResponse from '../Utils/ApiResponse.js'
+import { asyncHandler } from '../Utils/asyncHandler.js'
 
 const ping = asyncHandler(async (req, res)=>{
     return res
