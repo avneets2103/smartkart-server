@@ -24,4 +24,8 @@ app.use("/api/v1/users", userRouter);
 import listRouter from "./Routes/list.routes.js"
 app.use("/api/v1/list", listRouter);
 
+// ping route
+import pingRouter from "./Routes/ping.routes.js"
+app.use("/api/v1/ping", pingRouter);
+
 export {app}
